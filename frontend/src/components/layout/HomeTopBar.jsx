@@ -1,10 +1,9 @@
 import React from 'react';
 import { Plus, Bell, MessageSquareText } from 'lucide-react';
 import { BrandWordmark } from '../Brand';
+import { toast } from 'sonner';
 
-// Home top bar per the mobile design:
-// [ Abroadhub. ]                                 (+)  (bell)  (messages·badge)
-export default function HomeTopBar({ unread = 2 }) {
+export default function HomeTopBar({ unread = 2, onCreate }) {
   return (
     <header
       data-testid="app-topbar"
@@ -13,14 +12,26 @@ export default function HomeTopBar({ unread = 2 }) {
       <div className="max-w-2xl mx-auto flex items-center justify-between px-4 h-16">
         <BrandWordmark size={30} />
         <div className="flex items-center gap-2.5">
-          <IconCircle testId="topbar-create-btn" ariaLabel="Create">
+          <IconCircle
+            testId="topbar-create-btn"
+            ariaLabel="Create"
+            onClick={() => onCreate ? onCreate() : toast.info('Compose coming soon')}
+          >
             <Plus size={18} className="text-[color:var(--ah-ink)]" />
           </IconCircle>
-          <IconCircle testId="topbar-notifications-btn" ariaLabel="Notifications">
+          <IconCircle
+            testId="topbar-notifications-btn"
+            ariaLabel="Notifications"
+            onClick={() => toast('No new notifications', { description: "You're all caught up." })}
+          >
             <Bell size={18} className="text-[color:var(--ah-ink)]" />
           </IconCircle>
           <div className="relative">
-            <IconCircle testId="topbar-messages-btn" ariaLabel="Messages">
+            <IconCircle
+              testId="topbar-messages-btn"
+              ariaLabel="Messages"
+              onClick={() => toast('Messages coming soon')}
+            >
               <MessageSquareText size={18} className="text-[color:var(--ah-ink)]" />
             </IconCircle>
             {unread > 0 && (

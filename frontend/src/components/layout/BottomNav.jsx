@@ -15,7 +15,7 @@ export default function BottomNav() {
   return (
     <nav
       data-testid="bottom-nav"
-      className="fixed bottom-0 inset-x-0 z-30 bg-white ah-shadow-nav border-t border-[color:var(--ah-line)] pb-safe"
+      className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white ah-shadow-nav border-t border-[color:var(--ah-line)] pb-safe"
     >
       <div className="max-w-2xl mx-auto grid grid-cols-5 h-[68px]">
         {items.map(({ to, label, icon: Icon, testId }) => (

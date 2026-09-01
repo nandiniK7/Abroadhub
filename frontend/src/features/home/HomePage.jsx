@@ -1,5 +1,5 @@
-import React from 'react';
-import AppShell from '../../components/layout/AppShell';
+import React, { useState } from 'react';
+import AppShell, { useShell } from '../../components/layout/AppShell';
 import HomeTopBar from '../../components/layout/HomeTopBar';
 import StoryRing from '../../components/StoryRing';
 import PostCard from '../../components/PostCard';
@@ -7,13 +7,21 @@ import { EmptyState, ErrorState, Skeleton } from '../../components/states/States
 import { api } from '../../services/api';
 import { useAsync } from '../../hooks/useAsync';
 import { Users } from 'lucide-react';
+import StoryViewer from './StoryViewer';
 
-export default function HomePage() {
+function HomeContent() {
+  const { openCreatePost } = useShell();
   const stories = useAsync(() => api.getStories(), []);
   const feed = useAsync(() => api.getFeed(), []);
+  const [viewing, setViewing] = useState(null);
+
+  const onStoryClick = (s) => {
+    if (s.isMe) { openCreatePost(); return; }
+    setViewing(s);
+  };
 
   return (
-    <AppShell topBar={<HomeTopBar unread={2} />}>
+    <>
       {/* Stories row */}
       <section data-testid="stories-section" className="bg-white">
         <div className="flex gap-3 overflow-x-auto ah-scrollbar-hide px-4 py-3">
@@ -23,11 +31,15 @@ export default function HomePage() {
               <Skeleton className="w-14 h-3" />
             </div>
           ))}
-          {stories.data?.map((s) => <StoryRing key={s.id} story={s} />)}
+          {stories.data?.map((s) => (
+            <div key={s.id} onClick={() => onStoryClick(s)} className="cursor-pointer">
+              <StoryRing story={s} />
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Feed — flat, dividers between */}
+      {/* Feed */}
       <section data-testid="feed-section" className="bg-white">
         {feed.loading && Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="px-4 py-4 border-b border-[color:var(--ah-line)]">
@@ -51,6 +63,21 @@ export default function HomePage() {
 
         {feed.data?.map((p) => <PostCard key={p.id} post={p} />)}
       </section>
+
+      {viewing && <StoryViewer story={viewing} onClose={() => setViewing(null)} />}
+    </>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <AppShell topBar={<HomeTopBarWrap />}>
+      <HomeContent />
     </AppShell>
   );
+}
+
+function HomeTopBarWrap() {
+  const { openCreatePost } = useShell();
+  return <HomeTopBar unread={2} onCreate={openCreatePost} />;
 }

@@ -24,14 +24,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--ah-coral)' }}>
-      {/* Top splash */}
-      <div className="flex-1 flex items-center justify-center px-6 pt-14 pb-6">
+    <div
+      className="min-h-screen flex flex-col lg:items-center lg:justify-center lg:p-8"
+      style={{ background: 'var(--ah-coral)' }}
+    >
+      {/* Splash */}
+      <div className="flex-1 lg:flex-none flex items-center justify-center px-6 pt-14 pb-6 lg:pt-0 lg:pb-8">
         <BrandLockup variant="onCoral" size={28} showTagline />
       </div>
 
-      {/* Sheet */}
-      <div className="bg-white rounded-t-[28px] px-6 pt-7 pb-8 shadow-2xl">
+      {/* Sheet / card */}
+      <div className="bg-white rounded-t-[28px] px-6 pt-7 pb-8 shadow-2xl lg:rounded-3xl lg:max-w-md lg:w-full lg:px-8">
         <h1 className="text-[26px] font-extrabold tracking-tight text-[color:var(--ah-ink)]">Welcome back</h1>
         <p className="mt-1 text-[14px] text-[color:var(--ah-ink-3)]">Sign in to continue to AbroadHub.</p>
 

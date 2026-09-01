@@ -2,6 +2,8 @@
 // Marked clearly for development-only use.
 import * as data from './mockData';
 
+let _feedOverride = null;
+
 const delay = (ms = 350) => new Promise((r) => setTimeout(r, ms));
 
 export const mockAdapter = {
@@ -31,13 +33,19 @@ export const mockAdapter = {
 
   // ---------- Feed / Posts ----------
   async getStories() { await delay(); return data.stories; },
-  async getFeed() { await delay(); return data.posts; },
-  async getPost(id) { await delay(); return data.posts.find((p) => p.id === id); },
+  async getFeed() { await delay(); return _feedOverride ?? data.posts; },
+  async getPost(id) { await delay(); return (_feedOverride ?? data.posts).find((p) => p.id === id); },
   async toggleLike(id) {
     await delay(150);
-    const p = data.posts.find((x) => x.id === id);
+    const list = _feedOverride ?? data.posts;
+    const p = list.find((x) => x.id === id);
     if (p) { p.liked = !p.liked; p.likes += p.liked ? 1 : -1; }
     return p;
+  },
+  async createPost(post) {
+    await delay(200);
+    _feedOverride = [post, ...(_feedOverride ?? data.posts)];
+    return post;
   },
 
   // ---------- Explore ----------
