@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Compass, Briefcase, MapPin, User } from 'lucide-react';
+import { Home, Search, Briefcase, Map, User } from 'lucide-react';
 
+// Bottom nav — active tab uses BLACK (with filled icon) per the mobile design.
 const items = [
   { to: '/', label: 'Home', icon: Home, testId: 'nav-home' },
-  { to: '/explore', label: 'Explore', icon: Compass, testId: 'nav-explore' },
+  { to: '/explore', label: 'Explore', icon: Search, testId: 'nav-explore' },
   { to: '/jobs', label: 'Jobs', icon: Briefcase, testId: 'nav-jobs' },
-  { to: '/nearby', label: 'Nearby', icon: MapPin, testId: 'nav-nearby' },
+  { to: '/nearby', label: 'Nearby', icon: Map, testId: 'nav-nearby' },
   { to: '/profile', label: 'Profile', icon: User, testId: 'nav-profile' },
 ];
 
@@ -16,7 +17,7 @@ export default function BottomNav() {
       data-testid="bottom-nav"
       className="fixed bottom-0 inset-x-0 z-30 bg-white ah-shadow-nav border-t border-[color:var(--ah-line)] pb-safe"
     >
-      <div className="max-w-2xl mx-auto grid grid-cols-5 h-16">
+      <div className="max-w-2xl mx-auto grid grid-cols-5 h-[68px]">
         {items.map(({ to, label, icon: Icon, testId }) => (
           <NavLink
             key={to}
@@ -25,13 +26,17 @@ export default function BottomNav() {
             data-testid={testId}
             className={({ isActive }) =>
               `flex flex-col items-center justify-center gap-1 ah-tap ${
-                isActive ? 'text-[color:var(--ah-coral)]' : 'text-[color:var(--ah-ink-3)]'
+                isActive ? 'text-[color:var(--ah-ink)]' : 'text-[color:var(--ah-ink-3)]'
               }`
             }
           >
             {({ isActive }) => (
               <>
-                <Icon size={22} strokeWidth={isActive ? 2.4 : 2} />
+                <Icon
+                  size={22}
+                  strokeWidth={isActive ? 2.2 : 1.8}
+                  fill={isActive ? 'currentColor' : 'none'}
+                />
                 <span className={`text-[11px] ${isActive ? 'font-semibold' : 'font-medium'}`}>
                   {label}
                 </span>

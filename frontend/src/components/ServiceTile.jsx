@@ -1,31 +1,29 @@
 import React from 'react';
-import { Star, MapPin } from 'lucide-react';
+import { Heart } from 'lucide-react';
 
-export default function ServiceTile({ service }) {
+// Popular service card — photo with a heart+likes chip overlaid.
+export default function ServiceCard({ service }) {
   return (
     <article
       data-testid={`service-${service.id}`}
-      className="bg-white rounded-2xl ah-shadow-card border border-[color:var(--ah-line)] overflow-hidden ah-tap"
+      className="relative rounded-2xl overflow-hidden ah-tap"
     >
-      <div className="relative">
-        <img src={service.img} alt={service.name} className="w-full h-32 object-cover" />
-        <span className="absolute top-2 left-2 bg-white/95 text-[11px] font-semibold px-2 py-0.5 rounded-full text-[color:var(--ah-ink)]">
-          {service.category}
-        </span>
+      <img
+        src={service.img}
+        alt={service.name}
+        className="w-full h-[200px] object-cover bg-[color:var(--ah-line-2)]"
+        loading="lazy"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/25" />
+      <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-white/95 backdrop-blur">
+        <Heart size={14} className="fill-[color:var(--ah-coral)] text-[color:var(--ah-coral)]" strokeWidth={0} />
+        <span className="text-[12px] font-bold text-[color:var(--ah-ink)]">{service.likes}</span>
       </div>
-      <div className="p-3">
-        <h4 className="text-[14px] font-bold text-[color:var(--ah-ink)] truncate">{service.name}</h4>
-        <div className="mt-1 flex items-center justify-between text-[12px]">
-          <span className="flex items-center gap-1 text-[color:var(--ah-ink-2)]">
-            <Star size={12} className="fill-[color:var(--ah-warning)] text-[color:var(--ah-warning)]" />
-            <span className="font-semibold text-[color:var(--ah-ink)]">{service.rating}</span>
-            <span className="text-[color:var(--ah-ink-3)]">({service.reviews})</span>
-          </span>
-          <span className="flex items-center gap-1 text-[color:var(--ah-ink-3)]">
-            <MapPin size={11} /> {service.distance}
-          </span>
+      {service.name && (
+        <div className="absolute left-3 bottom-3 right-3 text-white text-[13px] font-bold drop-shadow">
+          {service.name}
         </div>
-      </div>
+      )}
     </article>
   );
 }

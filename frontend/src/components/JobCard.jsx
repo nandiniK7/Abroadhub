@@ -1,70 +1,65 @@
-import React, { useState } from 'react';
-import { Bookmark, MapPin, Building2, Briefcase } from 'lucide-react';
-import { api } from '../services/api';
+import React from 'react';
+import { Phone, MessageCircle, Send, MapPin } from 'lucide-react';
 
+const typeStyles = {
+  'Full Time': 'bg-[color:var(--ah-tag-green)] text-[color:var(--ah-tag-green-fg)]',
+  'Part Time': 'bg-[color:var(--ah-tag-amber)] text-[color:var(--ah-tag-amber-fg)]',
+  'Contract': 'bg-[color:var(--ah-tag-purple)] text-[color:var(--ah-tag-purple-fg)]',
+  'Internship': 'bg-[color:var(--ah-tag-blue)] text-[color:var(--ah-tag-blue-fg)]',
+};
+
+// Job card — cover photo on the left; title, company, tag+salary, description,
+// and three action buttons (Call / Message / Share).
 export default function JobCard({ job }) {
-  const [saved, setSaved] = useState(job.saved);
-
-  const onSave = async (e) => {
-    e.stopPropagation();
-    setSaved((v) => !v);
-    try { await api.toggleSaveJob(job.id); } catch { /* noop */ }
-  };
+  const tagClass = typeStyles[job.type] || 'bg-[color:var(--ah-line-2)] text-[color:var(--ah-ink-2)]';
 
   return (
     <article
       data-testid={`job-card-${job.id}`}
-      className="bg-white rounded-2xl ah-shadow-card border border-[color:var(--ah-line)] p-4 flex gap-3 ah-tap"
+      className="bg-white rounded-2xl border border-[color:var(--ah-line)] overflow-hidden"
     >
-      <img
-        src={job.logo}
-        alt={job.company}
-        className="w-12 h-12 rounded-xl object-cover bg-[color:var(--ah-bg)] flex-shrink-0"
-      />
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <h3 className="text-[15px] font-bold text-[color:var(--ah-ink)] truncate">
-              {job.title}
-            </h3>
-            <div className="text-[13px] text-[color:var(--ah-ink-2)] flex items-center gap-1">
-              <Building2 size={12} /> {job.company}
-            </div>
-          </div>
-          <button
-            data-testid={`job-save-${job.id}`}
-            onClick={onSave}
-            className="w-9 h-9 rounded-full grid place-items-center ah-tap hover:bg-[color:var(--ah-bg)]"
-            aria-label="Save job"
-          >
-            <Bookmark
-              size={18}
-              className={saved ? 'fill-[color:var(--ah-coral)] text-[color:var(--ah-coral)]' : 'text-[color:var(--ah-ink-2)]'}
-            />
-          </button>
-        </div>
+      <div className="flex gap-3 p-3">
+        <img
+          src={job.cover}
+          alt={job.title}
+          className="w-[110px] h-[128px] rounded-xl object-cover bg-[color:var(--ah-line-2)] flex-shrink-0"
+          loading="lazy"
+        />
+        <div className="flex-1 min-w-0">
+          <h3 className="text-[16px] font-bold text-[color:var(--ah-ink)] leading-tight">
+            {job.title}
+          </h3>
+          <div className="text-[13px] text-[color:var(--ah-ink-2)] mt-0.5">{job.company}</div>
 
-        <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-[color:var(--ah-ink-3)]">
-          <span className="flex items-center gap-1"><MapPin size={11} /> {job.city}</span>
-          <span className="flex items-center gap-1"><Briefcase size={11} /> {job.type} · {job.remote}</span>
-        </div>
-
-        <div className="mt-2 flex items-center justify-between gap-2">
-          <span className="text-[13px] font-semibold text-[color:var(--ah-ink)]">{job.salary}</span>
-          <span className="text-[11px] text-[color:var(--ah-ink-3)]">{job.postedAt}</span>
-        </div>
-
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {job.tags.map((t) => (
-            <span
-              key={t}
-              className="text-[11px] px-2 py-0.5 rounded-full bg-[color:var(--ah-coral-50)] text-[color:var(--ah-coral-600)] font-medium"
-            >
-              {t}
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-[12px] text-[color:var(--ah-ink-2)]">
+            <span className={`px-2 py-0.5 rounded-md font-semibold ${tagClass}`}>{job.type}</span>
+            <span className="font-semibold text-[color:var(--ah-ink)]">{job.salary}</span>
+            <span className="flex items-center gap-1 text-[color:var(--ah-ink-2)]">
+              <MapPin size={12} /> {job.location}
             </span>
-          ))}
+          </div>
+
+          <p className="mt-2 text-[13px] text-[color:var(--ah-ink-2)] leading-[1.35] line-clamp-2">
+            {job.description}
+          </p>
         </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-2 px-3 pb-3">
+        <ActionBtn testId={`job-call-${job.id}`} icon={Phone} label="Call Now" />
+        <ActionBtn testId={`job-message-${job.id}`} icon={MessageCircle} label="Message" />
+        <ActionBtn testId={`job-share-${job.id}`} icon={Send} label="Share" />
       </div>
     </article>
   );
 }
+
+const ActionBtn = ({ testId, icon: Icon, label }) => (
+  <button
+    data-testid={testId}
+    className="h-10 rounded-xl border border-[color:var(--ah-line)] bg-white flex items-center justify-center gap-1.5 text-[13px] font-semibold text-[color:var(--ah-ink)] ah-tap hover:bg-[color:var(--ah-line-2)]"
+  >
+    <Icon size={15} strokeWidth={2} />
+    {label}
+  </button>
+);

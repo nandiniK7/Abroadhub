@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import AppShell from '../../components/layout/AppShell';
+import HomeTopBar from '../../components/layout/HomeTopBar';
 import { Search, X } from 'lucide-react';
 import { api } from '../../services/api';
 import { useAsync } from '../../hooks/useAsync';
@@ -17,17 +18,17 @@ export default function ExplorePage() {
   }, [data, q]);
 
   return (
-    <AppShell>
+    <AppShell topBar={<HomeTopBar unread={2} />}>
       {/* Search bar */}
-      <div className="px-4 py-3 bg-white border-b border-[color:var(--ah-line)] sticky top-14 z-20">
-        <div className="flex items-center gap-2 h-11 px-3 rounded-full bg-[color:var(--ah-bg)] border border-[color:var(--ah-line)] focus-within:border-[color:var(--ah-coral)] transition">
+      <div className="px-4 py-3 bg-white border-b border-[color:var(--ah-line)]">
+        <div className="flex items-center gap-2 h-12 px-3 rounded-xl border border-[color:var(--ah-line)] bg-white">
           <Search size={18} className="text-[color:var(--ah-ink-3)]" />
           <input
             data-testid="explore-search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search places, people, tags"
-            className="flex-1 bg-transparent outline-none text-sm text-[color:var(--ah-ink)] placeholder:text-[color:var(--ah-ink-3)]"
+            className="flex-1 bg-transparent outline-none text-[14px] text-[color:var(--ah-ink)] placeholder:text-[color:var(--ah-ink-3)]"
           />
           {q && (
             <button
@@ -42,8 +43,7 @@ export default function ExplorePage() {
         </div>
       </div>
 
-      {/* Masonry via CSS columns */}
-      <section data-testid="explore-grid" className="px-3 py-3">
+      <section data-testid="explore-grid" className="px-3 py-3 bg-white">
         {loading && (
           <div className="columns-2 sm:columns-3 gap-3 space-y-3">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -61,21 +61,10 @@ export default function ExplorePage() {
               <button
                 key={item.id}
                 data-testid={`explore-tile-${item.id}`}
-                className="mb-3 block w-full rounded-xl overflow-hidden bg-white ah-shadow-card ah-tap relative group"
+                className="mb-3 block w-full rounded-xl overflow-hidden bg-white ah-tap relative group"
                 style={{ height: item.h }}
               >
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute left-2 bottom-2 right-2 text-left">
-                  <div className="text-[12px] font-semibold text-white drop-shadow opacity-0 group-hover:opacity-100 transition-opacity">
-                    {item.title}
-                  </div>
-                </div>
+                <img src={item.img} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
               </button>
             ))}
           </div>

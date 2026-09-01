@@ -1,0 +1,29 @@
+{
+  "summary": "Frontend-only Playwright test at 430x932 mobile viewport. 59/61 assertions passed across auth (login redirect, invalid password, valid login, duplicate signup, new signup), Home (topbar 3 buttons, messages-badge '2', 7 story cards incl. story-live-s3, PostCard p1 like toggle 28->29), bottom nav (Home/Explore/Jobs/Nearby/Profile), Jobs page (create/view-toggle/locate/search + 4 filter pills + job-card-j1 with call/message/share + 'Kenai' address + '25' count), Nearby page (view-toggle/notifications/locate/search + 11 category tiles + 4 popular services + SEE ALL), and Profile page (menu-btn, name 'Aarav', @handle, Photographer pill, 4.5 rating, stat-following/followers, Call Now/Website, Posts/Photos tabs, menu opens and logout returns to /login). 2 minor issues found (see below).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "NearbyPage", "issue": "The 'nearby-cat-more' (100+ Categories) tile is not rendered because mockAdapter returns exactly 11 categories and the tile is gated behind `overflow > 0` (only shows when >11). Spec requires the tile to always appear alongside the 11 categories.", "selector": "[data-testid='nearby-cat-more']", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "BottomNav active state", "issues": ["Active tab color is rgb(11,13,16) (--ah-ink, near-black) rather than pure black rgb(0,0,0). Visually looks black and matches design intent; only note if strict pure-black is required."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "In NearbyPage.jsx line 108, either (a) always render the 'nearby-cat-more' tile after the 11 categories, or (b) update mockAdapter.js to return >11 categories so overflow triggers. Spec lists 11 named categories PLUS a 100+ Categories tile."
+  ],
+  "critical_code_review_comments": [
+    "NearbyPage.jsx: overflow logic (line 18/108) prevents the '100+ Categories' tile from ever showing with the current mock data (11 items). Recommend rendering the tile unconditionally.",
+    "Console emits 401/409 errors during expected negative auth flows (wrong password / duplicate signup). Consider swallowing these known-expected fetch errors in AuthContext to keep the console clean, or documenting that they are expected."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only per request)", "frontend": "97% (59/61)"},
+  "test_credentials": "demo@abroadhub.app / demo1234 (works). New signup with unique email works. Duplicate signup with demo email returns 'An account with this email already exists.'",
+  "seed_data_creation": "One transient test user created via signup with email test_<epoch>@abroadhub.app / pass1234 (not cleaned up; users collection may accumulate TEST_ accounts).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "All requested testids exist except 'nearby-cat-more'. Login/signup/logout, story ring with Live badge, PostCard like toggle, all 5 bottom-nav tabs, all Jobs testids, all Profile testids and menu-open+logout all verified working. If retesting, use viewport 430x932 and the demo credentials above.",
+  "rca of the issue": "nearby-cat-more missing: NearbyPage.jsx computes `overflow = cats.data.length - 11` then only renders the more tile when overflow > 0. mockAdapter.getNearbyCategories returns exactly 11 items so overflow = 0. Fix: render tile unconditionally OR add a 12th mock category."
+}

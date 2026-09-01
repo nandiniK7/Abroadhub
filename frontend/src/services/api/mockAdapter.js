@@ -44,17 +44,9 @@ export const mockAdapter = {
   async getExplore() { await delay(); return data.explore; },
 
   // ---------- Jobs ----------
-  async getJobs({ filter = 'All', q = '' } = {}) {
+  async getJobs({ q = '' } = {}) {
     await delay();
     let list = data.jobs;
-    if (filter && filter !== 'All') {
-      list = list.filter(
-        (j) =>
-          j.type === filter ||
-          j.remote === filter ||
-          j.tags.some((t) => t.toLowerCase() === filter.toLowerCase())
-      );
-    }
     if (q) {
       const s = q.toLowerCase();
       list = list.filter(
@@ -63,7 +55,7 @@ export const mockAdapter = {
     }
     return list;
   },
-  async getJobFilters() { await delay(100); return data.jobFilters; },
+  async getJobFilters() { await delay(100); return ['All']; },
   async toggleSaveJob(id) {
     await delay(120);
     const j = data.jobs.find((x) => x.id === id);

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { BrandLockup } from '../../components/Brand';
 import { useAuth } from '../../store/AuthContext';
-import { IS_MOCK } from '../../services/api';
 import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
@@ -21,40 +20,34 @@ export default function LoginPage() {
       await login({ email, password });
       const from = loc.state?.from?.pathname || '/';
       nav(from, { replace: true });
-    } catch (err) {
-      setError(err?.message || 'Login failed');
-    }
+    } catch (err) { setError(err?.message || 'Login failed'); }
   };
 
   return (
-    <div className="min-h-screen bg-[color:var(--ah-bg)] flex items-center justify-center px-5 py-8">
-      <div className="w-full max-w-md bg-white rounded-3xl ah-shadow-card border border-[color:var(--ah-line)] p-6">
-        <div className="flex flex-col items-center text-center">
-          <BrandLockup size={40} showTagline />
-        </div>
+    <div className="min-h-screen flex flex-col" style={{ background: 'var(--ah-coral)' }}>
+      {/* Top splash */}
+      <div className="flex-1 flex items-center justify-center px-6 pt-14 pb-6">
+        <BrandLockup variant="onCoral" size={28} showTagline />
+      </div>
 
-        <h1 className="mt-6 text-2xl font-extrabold text-[color:var(--ah-ink)] tracking-tight">Welcome back</h1>
-        <p className="mt-1 text-sm text-[color:var(--ah-ink-3)]">Sign in to your AbroadHub account.</p>
+      {/* Sheet */}
+      <div className="bg-white rounded-t-[28px] px-6 pt-7 pb-8 shadow-2xl">
+        <h1 className="text-[26px] font-extrabold tracking-tight text-[color:var(--ah-ink)]">Welcome back</h1>
+        <p className="mt-1 text-[14px] text-[color:var(--ah-ink-3)]">Sign in to continue to AbroadHub.</p>
 
-        {IS_MOCK && (
-          <div className="mt-4 rounded-xl border border-[color:var(--ah-coral)]/25 bg-[color:var(--ah-coral-50)] px-3 py-2 text-[12px] text-[color:var(--ah-coral-600)] font-medium">
-            Auth is live — create an account or sign in with your real email &amp; password.
-          </div>
-        )}
-
-        <form onSubmit={onSubmit} className="mt-6 space-y-3">
-          <Field icon={Mail} label="Email">
+        <form onSubmit={onSubmit} className="mt-5 space-y-3">
+          <Field icon={Mail}>
             <input
               data-testid="login-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="flex-1 bg-transparent outline-none text-sm"
-              placeholder="you@abroadhub.app"
+              className="flex-1 bg-transparent outline-none text-[14px]"
+              placeholder="Email"
             />
           </Field>
-          <Field icon={Lock} label="Password">
+          <Field icon={Lock}>
             <input
               data-testid="login-password"
               type={show ? 'text' : 'password'}
@@ -62,14 +55,14 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={4}
-              className="flex-1 bg-transparent outline-none text-sm"
-              placeholder="••••••••"
+              className="flex-1 bg-transparent outline-none text-[14px]"
+              placeholder="Password"
             />
             <button
               type="button"
               data-testid="login-toggle-password"
               onClick={() => setShow((v) => !v)}
-              className="w-8 h-8 grid place-items-center rounded-full hover:bg-[color:var(--ah-bg)]"
+              className="w-8 h-8 grid place-items-center rounded-full hover:bg-[color:var(--ah-line-2)]"
               aria-label="Toggle password"
             >
               {show ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -86,7 +79,7 @@ export default function LoginPage() {
             data-testid="login-submit"
             type="submit"
             disabled={loading}
-            className="w-full h-11 rounded-full bg-[color:var(--ah-coral)] hover:bg-[color:var(--ah-coral-600)] text-white text-sm font-semibold flex items-center justify-center gap-2 ah-tap disabled:opacity-70"
+            className="w-full h-12 rounded-full bg-[color:var(--ah-coral)] hover:bg-[color:var(--ah-coral-600)] text-white text-[15px] font-bold flex items-center justify-center gap-2 ah-tap disabled:opacity-70"
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
             Sign in
@@ -95,7 +88,7 @@ export default function LoginPage() {
 
         <div className="mt-4 text-center text-[13px] text-[color:var(--ah-ink-3)]">
           Don&apos;t have an account?{' '}
-          <Link data-testid="link-signup" to="/signup" className="font-semibold text-[color:var(--ah-coral)]">
+          <Link data-testid="link-signup" to="/signup" className="font-bold text-[color:var(--ah-coral)]">
             Sign up
           </Link>
         </div>
@@ -104,12 +97,9 @@ export default function LoginPage() {
   );
 }
 
-const Field = ({ icon: Icon, label, children }) => (
-  <label className="block">
-    <span className="sr-only">{label}</span>
-    <div className="flex items-center gap-2 h-11 px-3 rounded-xl bg-[color:var(--ah-bg)] border border-[color:var(--ah-line)] focus-within:border-[color:var(--ah-coral)] transition">
-      <Icon size={16} className="text-[color:var(--ah-ink-3)]" />
-      {children}
-    </div>
-  </label>
+const Field = ({ icon: Icon, children }) => (
+  <div className="flex items-center gap-2 h-12 px-3 rounded-xl bg-[color:var(--ah-line-2)] border border-[color:var(--ah-line)] focus-within:border-[color:var(--ah-coral)] transition">
+    <Icon size={16} className="text-[color:var(--ah-ink-3)]" />
+    {children}
+  </div>
 );
