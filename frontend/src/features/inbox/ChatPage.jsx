@@ -4,6 +4,8 @@ import PageHeader from '../../components/layout/PageHeader';
 import { Send } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { api } from '../../services/api';
+import { useRealtime } from '../../hooks/useRealtime';
+import { RT } from '../../services/realtime';
 
 export default function ChatPage() {
   const { cid } = useParams();
@@ -25,6 +27,12 @@ export default function ChatPage() {
   useEffect(() => {
     if (boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight;
   }, [messages]);
+
+  // Live: pick up messages sent from other tabs for this conversation.
+  useRealtime(RT.MESSAGE_NEW, (evt) => {
+    if (!evt || evt.cid !== cid) return;
+    setMessages((cur) => (cur.some((m) => m.id === evt.msg.id) ? cur : [...cur, evt.msg]));
+  });
 
   const send = async () => {
     if (!draft.trim()) return;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, Bell, MessageSquareText } from 'lucide-react';
-import { BrandMarkColor, BrandWordmark } from '../Brand';
+import { BrandWordmark } from '../Brand';
 import { useNavigate } from 'react-router-dom';
 import { useShell } from './AppShell';
 
@@ -10,10 +10,7 @@ export default function HomeTopBar({ unread = 0, notifCount = 0 }) {
   return (
     <header data-testid="app-topbar" className="sticky top-0 z-30 bg-white border-b border-[color:var(--ah-line)]">
       <div className="max-w-2xl mx-auto flex items-center justify-between px-4 h-16">
-        <div className="flex items-center gap-2">
-          <BrandMarkColor size={36} />
-          <BrandWordmark size={18} />
-        </div>
+        <BrandWordmark size={30} />
         <div className="flex items-center gap-1">
           <IconBtn testId="topbar-create-btn" ariaLabel="Create" onClick={openCreateMenu}>
             <Plus size={22} className="text-[color:var(--ah-ink)]" strokeWidth={2} />

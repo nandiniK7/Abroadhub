@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppShell from '../../components/layout/AppShell';
 import HomeTopBar from '../../components/layout/HomeTopBar';
 import StoryRing from '../../components/StoryRing';
@@ -6,15 +6,19 @@ import PostCard from '../../components/PostCard';
 import { EmptyState, ErrorState, Skeleton } from '../../components/states/States';
 import { api } from '../../services/api';
 import { useAsync } from '../../hooks/useAsync';
+import { useRealtime } from '../../hooks/useRealtime';
+import { RT } from '../../services/realtime';
 import { Users } from 'lucide-react';
 import { useShell } from '../../components/layout/AppShell';
 
 export default function HomePage() {
   const stories = useAsync(() => api.getStories(), []);
   const feed = useAsync(() => api.getFeed(), []);
+  const [unread, setUnread] = useState(0);
+  useRealtime(RT.NOTIFICATION_NEW, () => setUnread((n) => n + 1));
 
   return (
-    <AppShell topBar={<HomeTopBar unread={2} notifCount={2} />}>
+    <AppShell topBar={<HomeTopBar unread={0} notifCount={unread} />}>
       <HomeInner stories={stories} feed={feed} />
     </AppShell>
   );
@@ -22,19 +26,25 @@ export default function HomePage() {
 
 function HomeInner({ stories, feed }) {
   const { openCreateMenu } = useShell();
-  const [feedData, setFeedData] = useState(null);
-  const items = feedData ?? feed.data;
+  const [items, setItems] = useState(null);
 
-  const onDelete = (id) => setFeedData((cur) => (cur ?? feed.data).filter((p) => p.id !== id));
+  // Seed local state once feed loads, then react to realtime.
+  useEffect(() => { if (feed.data && !items) setItems(feed.data); }, [feed.data, items]);
+  useRealtime(RT.POST_CREATED, (post) => setItems((cur) => [post, ...(cur ?? [])]));
+  useRealtime(RT.POST_DELETED, ({ id }) => setItems((cur) => (cur ?? []).filter((p) => p.id !== id)));
+  useRealtime(RT.POST_LIKED, ({ id, liked, likes }) =>
+    setItems((cur) => (cur ?? []).map((p) => p.id === id ? { ...p, liked, likes } : p))
+  );
+
+  const onDelete = (id) => setItems((cur) => (cur ?? []).filter((p) => p.id !== id));
+  const list = items ?? feed.data;
 
   return (
     <>
       <section data-testid="stories-section" className="bg-white">
         <div className="flex gap-3 overflow-x-auto ah-scrollbar-hide px-4 py-4">
           {stories.loading && (
-            <div className="w-[112px]">
-              <Skeleton className="w-full h-[150px] rounded-2xl" />
-            </div>
+            <div className="w-[128px]"><Skeleton className="w-full h-[150px] rounded-2xl" /></div>
           )}
           {stories.data?.map((s) => (
             <StoryRing key={s.id} story={s} onOpen={openCreateMenu} />
@@ -51,10 +61,10 @@ function HomeInner({ stories, feed }) {
           </div>
         ))}
         {feed.error && <ErrorState onRetry={feed.refetch} />}
-        {!feed.loading && items?.length === 0 && (
+        {!feed.loading && list?.length === 0 && (
           <EmptyState icon={Users} title="Your feed is quiet" subtitle="Follow people or explore topics to fill it up." />
         )}
-        {items?.map((p) => <PostCard key={p.id} post={p} onDelete={onDelete} />)}
+        {list?.map((p) => <PostCard key={p.id} post={p} onDelete={onDelete} />)}
       </section>
     </>
   );

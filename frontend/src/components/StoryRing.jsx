@@ -1,32 +1,40 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
 
-// Story tile matching the reference: white card with rounded corners,
-// square-ish image and an "Add Story" red-circle + at the bottom-center.
+// Story tile matching the user's reference:
+// White rounded card → circle avatar with dashed coral ring → red + at bottom-right → "Add Story" label below.
 export default function StoryRing({ story, onOpen }) {
   const { user, isMe } = story;
   return (
     <button
       data-testid={`story-${story.id}`}
       onClick={() => onOpen?.(story)}
-      className="flex flex-col items-stretch flex-shrink-0 ah-tap w-[112px]"
+      className="flex flex-col items-center flex-shrink-0 ah-tap w-[128px] bg-white border border-[color:var(--ah-line)] rounded-2xl p-3"
       aria-label={`${user.name} story`}
     >
-      <div className="relative rounded-2xl overflow-hidden bg-[color:var(--ah-line-2)]" style={{ aspectRatio: '9/12' }}>
-        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-        <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-black/25 to-transparent" />
-        <div className="absolute top-2 left-2 right-2 text-white text-[12px] font-semibold drop-shadow">
-          {user.name}
+      <div className="relative">
+        <div
+          className="rounded-full p-[3px]"
+          style={{
+            border: '2px dashed #F46F5E',
+            width: 92, height: 92,
+          }}
+        >
+          <img
+            src={user.avatar}
+            alt={user.name}
+            className="w-full h-full rounded-full object-cover bg-[color:var(--ah-line-2)]"
+          />
         </div>
         {isMe && (
-          <div className="absolute left-0 right-0 -bottom-3 flex justify-center">
-            <span className="w-8 h-8 rounded-full bg-[color:var(--ah-coral)] border-[3px] border-white grid place-items-center">
-              <Plus size={16} className="text-white" strokeWidth={3} />
-            </span>
-          </div>
+          <span className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-[color:var(--ah-coral)] border-[3px] border-white grid place-items-center">
+            <Plus size={14} className="text-white" strokeWidth={3} />
+          </span>
         )}
       </div>
-      <div className="mt-4 h-[14px]" />
+      <span className="mt-3 text-[13px] font-semibold text-[color:var(--ah-ink)]">
+        {isMe ? 'Add Story' : user.name}
+      </span>
     </button>
   );
 }

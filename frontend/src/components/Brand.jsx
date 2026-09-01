@@ -62,13 +62,13 @@ export const BrandMarkWhite = ({ size = 96 }) => (
   </svg>
 );
 
-// Header wordmark — clean coral "Abroad Hub"
-export const BrandWordmark = ({ size = 22 }) => (
+// Header wordmark — script "Abroad Hub" in coral.
+export const BrandWordmark = ({ size = 26 }) => (
   <span
-    className="font-extrabold leading-none select-none tracking-tight"
-    style={{ color: '#F46F5E', fontSize: size, letterSpacing: '-0.01em' }}
+    className="font-script leading-none select-none"
+    style={{ color: '#F46F5E', fontSize: size, letterSpacing: '0em' }}
   >
-    Abroad<span style={{ color: '#0B0D10' }}> Hub</span>
+    Abroad Hub
   </span>
 );
 
@@ -77,8 +77,8 @@ export const BrandLockup = ({ size = 44, variant = 'default', showTagline = fals
     return (
       <div className="flex flex-col items-center gap-4">
         <BrandMarkWhite size={size * 2} />
-        <div className="text-white text-[26px] font-extrabold tracking-tight">
-          Abroad<span className="font-light"> Hub</span>
+        <div className="font-script text-white" style={{ fontSize: size * 1.4 }}>
+          Abroad Hub
         </div>
         {showTagline && (
           <div className="text-white/95 text-[14px] font-medium">Connecting people abroad.</div>
@@ -89,7 +89,9 @@ export const BrandLockup = ({ size = 44, variant = 'default', showTagline = fals
   return (
     <div className="flex items-center gap-2">
       <BrandMarkColor size={size} />
-      <BrandWordmark size={size * 0.5} />
+      <span className="font-script leading-none" style={{ color: '#F46F5E', fontSize: size * 0.65 }}>
+        Abroad Hub
+      </span>
     </div>
   );
 };

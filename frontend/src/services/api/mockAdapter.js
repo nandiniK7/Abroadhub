@@ -1,4 +1,5 @@
 import * as data from './mockData';
+import { realtime, RT } from '../realtime';
 
 let _feed = null;
 let _notifs = null;
@@ -31,10 +32,25 @@ export const mockAdapter = {
     init(); await delay(120);
     const p = _feed.find((x) => x.id === id);
     if (p) { p.liked = !p.liked; p.likes += p.liked ? 1 : -1; }
+    realtime.publish(RT.POST_LIKED, { id, liked: p?.liked, likes: p?.likes });
     return p;
   },
-  async createPost(post) { init(); await delay(200); _feed = [post, ..._feed]; return post; },
-  async deletePost(id) { init(); await delay(200); _feed = _feed.filter((p) => p.id !== id); return true; },
+  async createPost(post) {
+    init(); await delay(200);
+    _feed = [post, ..._feed];
+    realtime.publish(RT.POST_CREATED, post);
+    // Also fire a notification event so the bell badge lights up in real time.
+    const n = { id: 'n_'+Date.now(), kind: 'like', title: 'Post published', description: 'Your post is live on the feed.', time: 'now', read: false };
+    _notifs = [n, ...(_notifs || [])];
+    realtime.publish(RT.NOTIFICATION_NEW, n);
+    return post;
+  },
+  async deletePost(id) {
+    init(); await delay(200);
+    _feed = _feed.filter((p) => p.id !== id);
+    realtime.publish(RT.POST_DELETED, { id });
+    return true;
+  },
   async updatePost(id, patch) { init(); await delay(200); _feed = _feed.map((p) => p.id === id ? { ...p, ...patch } : p); return _feed.find((p) => p.id === id); },
 
   // Explore
@@ -58,7 +74,7 @@ export const mockAdapter = {
   // Notifications
   async getNotifications() { init(); await delay(); return _notifs; },
   async markNotificationRead(id) { init(); await delay(80); const n = _notifs.find((x) => x.id === id); if (n) n.read = true; return n; },
-  async markAllNotificationsRead() { init(); await delay(120); _notifs = _notifs.map((n) => ({ ...n, read: true })); return _notifs; },
+  async markAllNotificationsRead() { init(); await delay(120); _notifs = _notifs.map((n) => ({ ...n, read: true })); realtime.publish(RT.NOTIFICATION_READ_ALL); return _notifs; },
 
   // Inbox
   async getConversations() { init(); await delay(); return _convos; },
@@ -69,6 +85,7 @@ export const mockAdapter = {
     _messages[cid] = [...(_messages[cid] || []), msg];
     const c = _convos.find((x) => x.id === cid);
     if (c) { c.last = text; c.time = 'now'; }
+    realtime.publish(RT.MESSAGE_NEW, { cid, msg });
     return msg;
   },
 
@@ -80,5 +97,5 @@ export const mockAdapter = {
 
   // Profile
   async getProfile() { init(); await delay(); return { user: _profile, photos: data.profilePhotos, posts: _feed.filter((p) => p.author.mine).slice(0, 6) }; },
-  async updateProfile(patch) { init(); await delay(200); _profile = { ..._profile, ...patch }; return _profile; },
+  async updateProfile(patch) { init(); await delay(200); _profile = { ..._profile, ...patch }; realtime.publish(RT.PROFILE_UPDATED, _profile); return _profile; },
 };

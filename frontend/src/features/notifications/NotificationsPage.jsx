@@ -4,6 +4,8 @@ import PageHeader from '../../components/layout/PageHeader';
 import { Heart, UserPlus, MessageCircle } from 'lucide-react';
 import { api } from '../../services/api';
 import { useAsync } from '../../hooks/useAsync';
+import { useRealtime } from '../../hooks/useRealtime';
+import { RT } from '../../services/realtime';
 import { EmptyState, Skeleton } from '../../components/states/States';
 import { toast } from 'sonner';
 
@@ -14,6 +16,9 @@ export default function NotificationsPage() {
   const { data, loading, refetch } = useAsync(() => api.getNotifications(), []);
   const [items, setItems] = useState(null);
   const list = items ?? data ?? [];
+
+  useRealtime(RT.NOTIFICATION_NEW, (n) => setItems((cur) => [n, ...(cur ?? data ?? [])]));
+  useRealtime(RT.NOTIFICATION_READ_ALL, () => setItems((cur) => (cur ?? data ?? []).map((n) => ({ ...n, read: true }))));
 
   const markAll = async () => {
     await api.markAllNotificationsRead();
