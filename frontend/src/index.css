@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    /* AbroadHub brand tokens */
+    --ah-coral: #F46F5E;
+    --ah-coral-600: #E85E4C;
+    --ah-coral-50: #FEF1EE;
+    --ah-ink: #14171A;
+    --ah-ink-2: #4A5058;
+    --ah-ink-3: #8A929B;
+    --ah-line: #ECEEF1;
+    --ah-surface: #FFFFFF;
+    --ah-bg: #F7F8FA;
+    --ah-success: #22A06B;
+    --ah-warning: #E5A93A;
+
+    /* shadcn mapping — light theme mapped to AbroadHub palette */
+    --background: 0 0% 100%;
+    --foreground: 210 11% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 11% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 11% 9%;
+    --primary: 8 88% 66%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 210 11% 15%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 8% 55%;
+    --accent: 8 88% 96%;
+    --accent-foreground: 8 60% 40%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 93%;
+    --input: 220 13% 93%;
+    --ring: 8 88% 66%;
+    --radius: 0.875rem;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--ah-bg);
+    color: var(--ah-ink);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+@layer base {
+    * { @apply border-border; }
+    body { @apply bg-background text-foreground; background: var(--ah-bg); }
+}
+
+/* Custom utilities */
+@layer utilities {
+    .ah-scrollbar-hide::-webkit-scrollbar { display: none; }
+    .ah-scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
+
+    .ah-shadow-card {
+        box-shadow: 0 1px 2px rgba(20, 23, 26, 0.04), 0 4px 12px rgba(20, 23, 26, 0.05);
+    }
+    .ah-shadow-nav {
+        box-shadow: 0 -2px 12px rgba(20, 23, 26, 0.06);
+    }
+
+    .ah-gradient-story {
+        background: conic-gradient(from 210deg, #F46F5E, #F4B45E, #F46F5E);
+    }
+
+    .ah-tap {
+        transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.2s ease;
+    }
+    .ah-tap:active { transform: scale(0.97); opacity: 0.9; }
+}
+
+/* Story ring outline */
+.story-ring {
+    padding: 2px;
+    border-radius: 9999px;
+    background: conic-gradient(from 210deg, #F46F5E 0deg, #F4B45E 180deg, #F46F5E 360deg);
+}
+.story-ring-seen {
+    padding: 2px;
+    border-radius: 9999px;
+    background: #E0E3E8;
+}
+
+/* Bottom-nav safe area for iOS-like devices */
+.pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 0px); }
+
+/* Selection */
+::selection { background: #FEDDD6; color: #14171A; }

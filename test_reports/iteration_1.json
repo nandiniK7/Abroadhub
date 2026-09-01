@@ -1,0 +1,25 @@
+{
+  "summary": "First-finish frontend smoke test for AbroadHub Web (React, mock adapter). All 11 requested feature flows verified via Playwright at 480x900. Auth (login/signup/logout), DEV mock banner, bottom nav (5 tabs + coral active state), Home stories+feed+like toggle, Explore masonry + search filter, Jobs location+search+chips (All/Remote/etc.)+save toggle, Nearby (8 categories + 4 services), and Profile (stats, tabs Posts/Photos, logout) all work. Zero console errors observed.",
+  "tested_scope": ["frontend", "auth", "integration"],
+  "passed": [
+    "Unauthenticated / redirects to /login",
+    "Login page shows AbroadHub brand + 'Connecting people abroad' tagline + email/password/submit",
+    "Login (demo@abroadhub.app / demo1234) navigates to Home and shows bottom-nav",
+    "DEV MODE mock banner visible on authenticated pages",
+    "Home renders stories row and PostCards; like button toggles state",
+    "Bottom nav navigates to Home(/), Explore(/explore), Jobs(/jobs), Nearby(/nearby), Profile(/profile)",
+    "Active bottom-nav tab highlighted coral rgb(244,111,94)",
+    "Explore renders 10 masonry tiles; search input filters (0 tiles for non-matching query)",
+    "Jobs shows location (jobs-location), 4 job cards, 7 filter chips; Remote chip filters to 2 cards; save (bookmark) toggles",
+    "Nearby shows 8 categories and 4 popular services",
+    "Profile shows avatar, stats (Posts/Followers/Following), name, edit button; Photos/Posts tabs switch; logout icon (profile-settings-btn) logs out and returns to /login",
+    "Signup with name+email+password(>=4) creates session and navigates Home",
+    "No console errors during full flow"
+  ],
+  "failed": [],
+  "action_items": [],
+  "success_rate": {"backend": "not tested (frontend-only per request)", "frontend": "100%"},
+  "retest_needed": false,
+  "full_testing_deferred": true,
+  "notes": "Backend is default Emergent template and not exercised. All API calls go through mockAdapter (REACT_APP_USE_MOCKS=true). Initial run had 3 apparent failures due to test-script timing/logic (Home at '/' not '/home'; Explore/Jobs still hydrating skeletons); re-verified with additional waits and all pass."
+}
