@@ -1,128 +1,87 @@
 import React from 'react';
 
-// The AbroadHub logo — rounded coral triangle with a top-down plane silhouette cut in white,
-// plus the "AbroadHub" script wordmark. Modeled to match the official brand asset.
+// AbroadHub logo — square rounded coral mark with plane-in-triangle glyph,
+// plus "Abroad Hub" wordmark. Replace this SVG with the official logo asset
+// once provided (see /public/logo/ or FINDINGS.md).
 
-// Coral triangle mark with white plane inside — used on splash / auth.
-export const BrandMarkColor = ({ size = 96 }) => (
-  <svg width={size} height={size} viewBox="0 0 200 200" fill="none" aria-hidden="true">
+export const BrandMarkColor = ({ size = 44 }) => (
+  <svg width={size} height={size} viewBox="0 0 100 100" fill="none" aria-hidden="true">
+    <rect x="0" y="0" width="100" height="100" rx="22" fill="#F46F5E" />
     <path
-      d="M100 14
-         C 112 14 122 20 128 30
-         L 184 148
-         C 192 162 182 180 166 180
-         L 34 180
-         C 18 180 8 162 16 148
-         L 72 30
-         C 78 20 88 14 100 14 Z"
-      fill="#F46F5E"
+      d="M50 26
+         L74 66
+         C 76 69 74 72 71 72
+         L 29 72
+         C 26 72 24 69 26 66
+         L 50 26 Z"
+      fill="none"
+      stroke="#FFFFFF"
+      strokeWidth="4"
+      strokeLinejoin="round"
     />
-    {/* Plane silhouette in white */}
     <path
-      d="M100 58
-         C 96 58 93 61 93 65
-         L 93 92
-         L 60 108
-         C 57 109 55 112 55 115
-         L 55 121
-         C 55 124 57 125 60 124
-         L 93 116
-         L 93 138
-         L 82 145
-         C 80 146 79 148 79 150
-         L 79 154
-         C 79 157 82 158 84 157
-         L 100 153
-         L 116 157
-         C 118 158 121 157 121 154
-         L 121 150
-         C 121 148 120 146 118 145
-         L 107 138
-         L 107 116
-         L 140 124
-         C 143 125 145 124 145 121
-         L 145 115
-         C 145 112 143 109 140 108
-         L 107 92
-         L 107 65
-         C 107 61 104 58 100 58 Z"
+      d="M50 38
+         C 48 38 47 39 47 41
+         L 47 52
+         L 36 58
+         C 35 58 34 59 34 60
+         L 34 62
+         C 34 63 35 64 36 63
+         L 47 60
+         L 47 66
+         L 42 69
+         L 42 71
+         L 50 69
+         L 58 71
+         L 58 69
+         L 53 66
+         L 53 60
+         L 64 63
+         C 65 64 66 63 66 62
+         L 66 60
+         C 66 59 65 58 64 58
+         L 53 52
+         L 53 41
+         C 53 39 52 38 50 38 Z"
       fill="#FFFFFF"
     />
   </svg>
 );
 
-// White mark on transparent — for use on the coral splash bg.
 export const BrandMarkWhite = ({ size = 96 }) => (
-  <svg width={size} height={size} viewBox="0 0 200 200" fill="none" aria-hidden="true">
+  <svg width={size} height={size} viewBox="0 0 100 100" fill="none" aria-hidden="true">
+    <rect x="0" y="0" width="100" height="100" rx="22" fill="#FFFFFF" />
     <path
-      d="M100 14
-         C 112 14 122 20 128 30
-         L 184 148
-         C 192 162 182 180 166 180
-         L 34 180
-         C 18 180 8 162 16 148
-         L 72 30
-         C 78 20 88 14 100 14 Z"
-      fill="#FFFFFF"
+      d="M50 26 L74 66 C 76 69 74 72 71 72 L 29 72 C 26 72 24 69 26 66 L 50 26 Z"
+      fill="none" stroke="#F46F5E" strokeWidth="4" strokeLinejoin="round"
     />
     <path
-      d="M100 58
-         C 96 58 93 61 93 65
-         L 93 92
-         L 60 108
-         C 57 109 55 112 55 115
-         L 55 121
-         C 55 124 57 125 60 124
-         L 93 116
-         L 93 138
-         L 82 145
-         C 80 146 79 148 79 150
-         L 79 154
-         C 79 157 82 158 84 157
-         L 100 153
-         L 116 157
-         C 118 158 121 157 121 154
-         L 121 150
-         C 121 148 120 146 118 145
-         L 107 138
-         L 107 116
-         L 140 124
-         C 143 125 145 124 145 121
-         L 145 115
-         C 145 112 143 109 140 108
-         L 107 92
-         L 107 65
-         C 107 61 104 58 100 58 Z"
+      d="M50 38 C 48 38 47 39 47 41 L 47 52 L 36 58 C 35 58 34 59 34 60 L 34 62 C 34 63 35 64 36 63 L 47 60 L 47 66 L 42 69 L 42 71 L 50 69 L 58 71 L 58 69 L 53 66 L 53 60 L 64 63 C 65 64 66 63 66 62 L 66 60 C 66 59 65 58 64 58 L 53 52 L 53 41 C 53 39 52 38 50 38 Z"
       fill="#F46F5E"
     />
   </svg>
 );
 
-// Script wordmark used in the app's top bar (black).
-export const BrandWordmark = ({ size = 28, color = '#0B0D10', withDot = true }) => (
+// Header wordmark — clean coral "Abroad Hub"
+export const BrandWordmark = ({ size = 22 }) => (
   <span
-    className="font-script leading-none tracking-tight select-none"
-    style={{ color, fontSize: size, letterSpacing: '-0.01em' }}
+    className="font-extrabold leading-none select-none tracking-tight"
+    style={{ color: '#F46F5E', fontSize: size, letterSpacing: '-0.01em' }}
   >
-    Abroadhub{withDot ? '.' : ''}
+    Abroad<span style={{ color: '#0B0D10' }}> Hub</span>
   </span>
 );
 
-// Splash / auth block — coral mark + white script wordmark on a coral background,
-// or white mark + white wordmark. Use variant="coral" for the on-coral splash.
-export const BrandLockup = ({ size = 34, variant = 'default', showTagline = false }) => {
+export const BrandLockup = ({ size = 44, variant = 'default', showTagline = false }) => {
   if (variant === 'onCoral') {
     return (
-      <div className="flex flex-col items-center gap-3">
-        <BrandMarkWhite size={size * 2.6} />
-        <span
-          className="font-script text-white leading-none"
-          style={{ fontSize: size * 1.9, letterSpacing: '-0.01em' }}
-        >
-          AbroadHub
-        </span>
+      <div className="flex flex-col items-center gap-4">
+        <BrandMarkWhite size={size * 2} />
+        <div className="text-white text-[26px] font-extrabold tracking-tight">
+          Abroad<span className="font-light"> Hub</span>
+        </div>
         {showTagline && (
-          <div className="text-white/95 text-[15px] font-medium">Connecting people abroad.</div>
+          <div className="text-white/95 text-[14px] font-medium">Connecting people abroad.</div>
         )}
       </div>
     );
@@ -130,7 +89,7 @@ export const BrandLockup = ({ size = 34, variant = 'default', showTagline = fals
   return (
     <div className="flex items-center gap-2">
       <BrandMarkColor size={size} />
-      <BrandWordmark size={size * 0.92} />
+      <BrandWordmark size={size * 0.5} />
     </div>
   );
 };
